@@ -1,5 +1,8 @@
 import { formatDbError } from "@/db";
-import { expireAllPastDueGiveaways } from "@/lib/expire-giveaways";
+import {
+	expireAllPastDueGiveaways,
+	logExpireDiagnostics,
+} from "@/lib/expire-giveaways";
 
 const INTERVAL_MS = 60_000;
 
@@ -14,6 +17,11 @@ async function tick(): Promise<void> {
 			console.log(
 				`[giveaway-expiry] ended ${result.expiredCount} giveaway(s): ${result.expiredIds.join(", ")}`,
 			);
+		} else {
+			await logExpireDiagnostics();
+		}
+		if (result.skippedCount > 0) {
+			console.warn(`[giveaway-expiry] skipped ${result.skippedCount} giveaway(s)`);
 		}
 	} catch (e) {
 		console.error("[giveaway-expiry] tick failed:", formatDbError(e));
@@ -30,5 +38,4 @@ export function startGiveawayExpiryScheduler(): void {
 	console.log("[giveaway-expiry] background scheduler started (every 60s)");
 }
 
-/** Alias for call sites that only need to ensure the loop is running. */
 export const ensureGiveawayExpiryScheduler = startGiveawayExpiryScheduler;

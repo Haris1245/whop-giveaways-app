@@ -3,6 +3,8 @@ import { pickWhopDevUserTokenFromRecord } from "@/lib/append-whop-dev-user-token
 import { whopSdk } from "@/lib/whop-sdk";
 import { resolveWhopUserTokenForVerification } from "@/lib/whop-user-token";
 import { headers } from "next/headers";
+import { syncPastDueGiveaways } from "@/lib/expire-giveaways";
+import { ensureGiveawayExpiryScheduler } from "@/lib/giveaway-expiry-scheduler";
 import GiveawayExperience from "./giveaway-experience";
 
 export default async function ExperiencePage({
@@ -54,6 +56,9 @@ export default async function ExperiencePage({
       </div>
     );
   }
+
+  ensureGiveawayExpiryScheduler();
+  await syncPastDueGiveaways(experienceId);
 
   return (
     <GiveawayExperience

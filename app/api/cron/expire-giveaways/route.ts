@@ -1,5 +1,8 @@
 import { formatDbError } from "@/db";
-import { expireAllPastDueGiveaways } from "@/lib/expire-giveaways";
+import {
+	expireAllPastDueGiveaways,
+	getExpireDiagnostics,
+} from "@/lib/expire-giveaways";
 import { ensureGiveawayExpiryScheduler } from "@/lib/giveaway-expiry-scheduler";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
@@ -23,7 +26,8 @@ export async function GET(request: NextRequest): Promise<Response> {
 
 	try {
 		const result = await expireAllPastDueGiveaways();
-		return NextResponse.json({ ok: true, ...result });
+		const diagnostics = await getExpireDiagnostics();
+		return NextResponse.json({ ok: true, ...result, diagnostics });
 	} catch (e) {
 		console.error("[cron/expire-giveaways]", formatDbError(e));
 		return NextResponse.json(
