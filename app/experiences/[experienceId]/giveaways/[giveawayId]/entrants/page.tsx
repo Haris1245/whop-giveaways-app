@@ -9,6 +9,7 @@ import { verifyUser } from "@/lib/authentication";
 import { db } from "@/db";
 import { entrantTable, giveawayTable } from "@/db/schema";
 import { enrichEntrantsWithWhopProfiles } from "@/lib/enrich-entrants-whop";
+import { syncPastDueGiveaways } from "@/lib/expire-giveaways";
 import type { EnrichedEntrant } from "@/lib/enrich-entrants-whop";
 import {
 	Avatar,
@@ -147,6 +148,8 @@ export default async function GiveawayEntrantsPage({
 
 	const whopDevUserToken = pickWhopDevUserTokenFromRecord(search);
 	const entrantsListPath = `/experiences/${experienceId}/giveaways/${giveawayId}/entrants`;
+
+	await syncPastDueGiveaways(experienceId, { giveawayId });
 
 	function entrantsPageHref(nextPage: number): string {
 		const q = nextPage <= 1 ? "" : `?page=${nextPage}`;

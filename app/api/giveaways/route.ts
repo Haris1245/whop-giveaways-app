@@ -5,6 +5,7 @@ import {
 	countActiveGiveawaysForExperience,
 	getCompanyPlanType,
 } from "@/lib/plan-access";
+import { syncPastDueGiveaways } from "@/lib/expire-giveaways";
 import { getPlanLimits, normalizeSecurityForPlan } from "@/lib/plans";
 import { whopSdk } from "@/lib/whop-sdk";
 import { and, count, desc, eq, inArray } from "drizzle-orm";
@@ -25,6 +26,8 @@ export async function GET(req: NextRequest) {
 
 	try {
 		const { userId } = await verifyUser(experienceId, undefined, req.nextUrl.searchParams);
+
+		await syncPastDueGiveaways(experienceId);
 
 		const rows = await db
 			.select()

@@ -2,6 +2,7 @@ import "server-only";
 
 import { db } from "@/db";
 import { entrantTable, giveawayTable } from "@/db/schema";
+import { syncPastDueGiveaways } from "@/lib/expire-giveaways";
 import { whopSdk } from "@/lib/whop-sdk";
 import type { GiveawayRow } from "@/app/experiences/[experienceId]/giveaway-hub-types";
 import { and, count, eq } from "drizzle-orm";
@@ -11,6 +12,8 @@ export async function loadGiveawayDetail(
 	giveawayId: string,
 	userId: string,
 ): Promise<(GiveawayRow & { requiredPassTitle: string | null }) | null> {
+	await syncPastDueGiveaways(experienceId, { giveawayId });
+
 	const rows = await db
 		.select()
 		.from(giveawayTable)

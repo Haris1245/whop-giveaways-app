@@ -1,4 +1,4 @@
-import { drizzle } from "drizzle-orm/node-postgres";
+import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 import pg from "pg";
 
 /** Prepare connection string after Next / dotenv have populated process.env */
@@ -37,10 +37,54 @@ function getDatabaseConnectionString(): string {
 	return s;
 }
 
-const connectionString = getDatabaseConnectionString();
+type GlobalDb = typeof globalThis & {
+	__giveawayPgPool?: pg.Pool;
+	__giveawayDrizzle?: NodePgDatabase;
+};
 
-export const db = drizzle(
-	new pg.Pool({
-		connectionString,
-	}),
-);
+function getPool(): pg.Pool {
+	const g = globalThis as GlobalDb;
+	if (!g.__giveawayPgPool) {
+		g.__giveawayPgPool = new pg.Pool({
+			connectionString: getDatabaseConnectionString(),
+			max: 10,
+			idleTimeoutMillis: 30_000,
+			connectionTimeoutMillis: 10_000,
+		});
+		g.__giveawayPgPool.on("error", (err) => {
+			console.error("[db] idle pool client error:", err);
+		});
+	}
+	return g.__giveawayPgPool;
+}
+
+function getDrizzle(): NodePgDatabase {
+	const g = globalThis as GlobalDb;
+	if (!g.__giveawayDrizzle) {
+		g.__giveawayDrizzle = drizzle(getPool());
+	}
+	return g.__giveawayDrizzle;
+}
+
+/** Lazy singleton — avoids connecting before env is ready and survives Next.js hot reload. */
+export const db = new Proxy({} as NodePgDatabase, {
+	get(_target, prop, receiver) {
+		const instance = getDrizzle();
+		const value = Reflect.get(instance, prop, receiver);
+		if (typeof value === "function") {
+			return value.bind(instance);
+		}
+		return value;
+	},
+});
+
+export function formatDbError(error: unknown): string {
+	if (error instanceof Error) {
+		const cause = error.cause;
+		if (cause instanceof Error) {
+			return `${error.message} — ${cause.message}`;
+		}
+		return error.message;
+	}
+	return String(error);
+}

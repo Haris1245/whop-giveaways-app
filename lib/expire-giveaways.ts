@@ -1,4 +1,4 @@
-import { db } from "@/db";
+import { db, formatDbError } from "@/db";
 import { entrantTable, giveawayTable } from "@/db/schema";
 import { notifyGiveawayCompleted } from "@/lib/notify-giveaway-winner";
 import { and, eq, lte } from "drizzle-orm";
@@ -9,7 +9,15 @@ export type ExpireGiveawaysResult = {
 	expiredIds: string[];
 };
 
-async function completeGiveaway(id: string, now: Date): Promise<void> {
+async function completeGiveaway(id: string, now: Date): Promise<boolean> {
+	const locked = await db
+		.update(giveawayTable)
+		.set({ status: "drawing", updatedAt: now })
+		.where(and(eq(giveawayTable.id, id), eq(giveawayTable.status, "active")))
+		.returning({ id: giveawayTable.id });
+
+	if (locked.length === 0) return false;
+
 	const [giveaway] = await db
 		.select({
 			title: giveawayTable.title,
@@ -20,7 +28,7 @@ async function completeGiveaway(id: string, now: Date): Promise<void> {
 		.where(eq(giveawayTable.id, id))
 		.limit(1);
 
-	if (!giveaway) return;
+	if (!giveaway) return false;
 
 	const entrants = await db
 		.select({ userId: entrantTable.userId })
@@ -53,6 +61,27 @@ async function completeGiveaway(id: string, now: Date): Promise<void> {
 			notify.errors.join("; "),
 		);
 	}
+
+	return true;
+}
+
+async function expirePastDueIds(
+	ids: string[],
+	now: Date,
+): Promise<ExpireGiveawaysResult> {
+	const expiredIds: string[] = [];
+	for (const id of ids) {
+		try {
+			const completed = await completeGiveaway(id, now);
+			if (completed) expiredIds.push(id);
+		} catch (e) {
+			console.error(
+				`[expire-giveaways] failed to complete giveaway ${id}:`,
+				formatDbError(e),
+			);
+		}
+	}
+	return { expiredCount: expiredIds.length, expiredIds };
 }
 
 /** Ends all past-due active giveaways (used by the background worker). */
@@ -66,13 +95,10 @@ export async function expireAllPastDueGiveaways(): Promise<ExpireGiveawaysResult
 			and(eq(giveawayTable.status, "active"), lte(giveawayTable.endTime, now)),
 		);
 
-	const expiredIds: string[] = [];
-	for (const { id } of pastDue) {
-		await completeGiveaway(id, now);
-		expiredIds.push(id);
-	}
-
-	return { expiredCount: expiredIds.length, expiredIds };
+	return expirePastDueIds(
+		pastDue.map((row) => row.id),
+		now,
+	);
 }
 
 /**
@@ -100,11 +126,28 @@ export async function expirePastDueGiveaways(
 		.from(giveawayTable)
 		.where(and(...conditions));
 
-	const expiredIds: string[] = [];
-	for (const { id } of pastDue) {
-		await completeGiveaway(id, now);
-		expiredIds.push(id);
-	}
+	return expirePastDueIds(
+		pastDue.map((row) => row.id),
+		now,
+	);
+}
 
-	return { expiredCount: expiredIds.length, expiredIds };
+/** Best-effort expiry for request handlers; logs and never throws. */
+export async function syncPastDueGiveaways(
+	experienceId: string,
+	options?: { giveawayId?: string },
+): Promise<void> {
+	try {
+		const result = await expirePastDueGiveaways(experienceId, options);
+		if (result.expiredCount > 0) {
+			console.log(
+				`[expire-giveaways] synced ${result.expiredCount} giveaway(s) for ${experienceId}: ${result.expiredIds.join(", ")}`,
+			);
+		}
+	} catch (e) {
+		console.error(
+			`[expire-giveaways] sync failed for ${experienceId}:`,
+			formatDbError(e),
+		);
+	}
 }

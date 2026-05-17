@@ -1,3 +1,4 @@
+import { formatDbError } from "@/db";
 import { expireAllPastDueGiveaways } from "@/lib/expire-giveaways";
 
 const INTERVAL_MS = 60_000;
@@ -15,7 +16,7 @@ async function tick(): Promise<void> {
 			);
 		}
 	} catch (e) {
-		console.error("[giveaway-expiry] tick failed:", e);
+		console.error("[giveaway-expiry] tick failed:", formatDbError(e));
 	}
 }
 
