@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "entrant_giveaway_user_unique" ON "entrant" USING btree ("giveaway_id","user_id");
