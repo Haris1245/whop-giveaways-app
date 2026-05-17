@@ -5,6 +5,7 @@ import {
 	countActiveGiveawaysForExperience,
 	getCompanyPlanType,
 } from "@/lib/plan-access";
+import { ensureGiveawayExpiryScheduler } from "@/lib/giveaway-expiry-scheduler";
 import { syncPastDueGiveaways } from "@/lib/expire-giveaways";
 import { getPlanLimits, normalizeSecurityForPlan } from "@/lib/plans";
 import { whopSdk } from "@/lib/whop-sdk";
@@ -27,6 +28,7 @@ export async function GET(req: NextRequest) {
 	try {
 		const { userId } = await verifyUser(experienceId, undefined, req.nextUrl.searchParams);
 
+		ensureGiveawayExpiryScheduler();
 		await syncPastDueGiveaways(experienceId);
 
 		const rows = await db

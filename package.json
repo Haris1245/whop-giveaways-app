@@ -25,11 +25,11 @@
     "frosted-ui": "^0.0.1-canary.80",
     "lucide": "^0.545.0",
     "lucide-react": "^0.545.0",
-    "next": "15.3.8",
+    "next": "^16.2.6",
     "pg": "^8.16.3",
     "radix-ui": "^1.4.3",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
     "tailwind-merge": "^3.6.0"
   },
   "devDependencies": {

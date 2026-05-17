@@ -29,3 +29,6 @@ export function startGiveawayExpiryScheduler(): void {
 	g.__giveawayExpiryInterval = setInterval(() => void tick(), INTERVAL_MS);
 	console.log("[giveaway-expiry] background scheduler started (every 60s)");
 }
+
+/** Alias for call sites that only need to ensure the loop is running. */
+export const ensureGiveawayExpiryScheduler = startGiveawayExpiryScheduler;
