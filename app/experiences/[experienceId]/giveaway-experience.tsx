@@ -114,7 +114,7 @@ export default function GiveawayExperience({
 				enabled={access !== "admin" && !loading}
 			/>
 			<header className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-700 bg-gray-800 px-4 py-4 md:px-8">
-				<Heading as="h1" size="5" weight="bold" className="text-white">
+				<Heading as="h1" size="8" weight="bold" className="text-white">
 					Giveaways
 				</Heading>
 				<div className="flex flex-wrap items-center justify-end gap-3">
