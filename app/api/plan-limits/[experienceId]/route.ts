@@ -40,7 +40,7 @@ export async function GET(
 			maxConcurrentActiveGiveaways: limits.maxConcurrentActiveGiveaways,
 			securityFeatures: limits.securityFeatures,
 			activeGiveawayCount,
-			proPriceMonthly: plans.pro.priceMonthly,
+			proPriceLifetime: plans.pro.priceLifetime,
 			proPlanId: plans.pro.planId,
 		});
 	} catch (error) {

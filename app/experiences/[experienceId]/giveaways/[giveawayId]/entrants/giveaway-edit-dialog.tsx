@@ -582,7 +582,7 @@ export function GiveawayEditDialog(props: {
 													<div className="flex flex-col gap-3">
 														<Text size="2" color="gray" className="leading-relaxed">
 															Duplicate IP checks and minimum Whop account age. Pro is $
-															{plans.pro.priceMonthly}/month.
+															{plans.pro.priceLifetime} lifetime.
 														</Text>
 														<div className="flex flex-wrap items-center gap-2">
 															<Button

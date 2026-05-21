@@ -84,7 +84,7 @@ const BillingForm = ({
 		},
 		pro: {
 			name: "Pro",
-			price: "$11.99/month",
+			price: "$10/lifetime",
 			description: "Full giveaways toolkit for growing communities",
 			features: [
 				{ text: "Unlimited active giveaways", available: true },
@@ -119,7 +119,7 @@ const BillingForm = ({
 			) : null}
 			{recieptId ? (
 				<Text size="2" color="green" className="mb-4">
-					Thanks — your Pro subscription is processing.
+					Thanks — your Pro purchase is processing.
 				</Text>
 			) : null}
 
@@ -155,9 +155,11 @@ const BillingForm = ({
 												${details.price.match(/\d+\.?\d*/)?.[0]}
 											</Text>
 											<Text size="4" color="gray" className="font-medium">
-												{details.price.includes("month")
-													? "/month"
-													: "/forever"}
+												{details.price.includes("lifetime")
+													? " lifetime"
+													: details.price.includes("month")
+														? "/month"
+														: "/forever"}
 											</Text>
 										</div>
 
