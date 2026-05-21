@@ -84,7 +84,7 @@ const BillingForm = ({
 		},
 		pro: {
 			name: "Pro",
-			price: "$10/lifetime",
+			price: "$25/lifetime",
 			description: "Full giveaways toolkit for growing communities",
 			features: [
 				{ text: "Unlimited active giveaways", available: true },
