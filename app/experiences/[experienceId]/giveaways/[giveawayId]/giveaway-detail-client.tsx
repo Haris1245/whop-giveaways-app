@@ -22,9 +22,13 @@ type DetailGiveaway = GiveawayRow & { requiredPassTitle?: string | null };
 
 function StatCard({ label, value }: { label: string; value: string }) {
 	return (
-		<div className="rounded-lg border border-white/[0.06] bg-white/[0.03] px-3.5 py-3">
-			<p className="text-[10px] font-medium uppercase tracking-wider text-gray-500">{label}</p>
-			<p className="mt-1 text-sm font-semibold leading-snug text-gray-100">{value}</p>
+		<div className="rounded-lg border border-black/10 bg-white ring-1 ring-black/[0.04] px-3.5 py-3 dark:border-white/[0.08] dark:bg-white/[0.03] dark:ring-white/[0.08]">
+			<p className="text-[10px] font-medium uppercase tracking-wider text-gray-600 dark:text-gray-500">
+				{label}
+			</p>
+			<p className="mt-1 text-sm font-semibold leading-snug text-gray-900 dark:text-gray-100">
+				{value}
+			</p>
 		</div>
 	);
 }
@@ -71,7 +75,7 @@ export function GiveawayDetailClient(props: {
 	}
 
 	return (
-		<div className="flex min-h-screen flex-col bg-[#0d0d0f] text-gray-100">
+		<div className="flex min-h-screen flex-col bg-white text-gray-900 dark:bg-[#0d0d0f] dark:text-gray-100">
 			{isWinner ? (
 				<WinnerConfettiOnLoad experienceId={props.experienceId} winIds={[g.id]} />
 			) : null}
@@ -81,7 +85,7 @@ export function GiveawayDetailClient(props: {
 				</div>
 				<div className="mx-auto flex w-full max-w-[920px] flex-col gap-8 lg:flex-row lg:items-start lg:justify-center lg:gap-10">
 					<div className="flex w-full shrink-0 flex-col gap-4 lg:max-w-[520px]">
-						<div className="relative aspect-video w-full overflow-hidden rounded-xl bg-gray-950">
+						<div className="relative aspect-video w-full overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-950">
 							{g.coverImageUrl ? (
 								<Image
 									src={g.coverImageUrl}
@@ -93,8 +97,8 @@ export function GiveawayDetailClient(props: {
 									priority
 								/>
 							) : (
-								<div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-violet-950/40 via-gray-900 to-gray-950">
-									<Ticket className="h-12 w-12 text-white/15" aria-hidden />
+								<div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-violet-100 via-gray-50 to-white dark:from-violet-950/40 dark:via-gray-900 dark:to-gray-950">
+									<Ticket className="h-12 w-12 text-black/15 dark:text-white/15" aria-hidden />
 								</div>
 							)}
 							<Badge
@@ -110,27 +114,32 @@ export function GiveawayDetailClient(props: {
 							as="h1"
 							size="8"
 							weight="bold"
-							className="text-balance leading-tight tracking-tight text-white"
+							className="text-balance leading-tight tracking-tight text-gray-900 dark:text-white"
 						>
 							{g.title}
 						</Heading>
 
 						{g.description.trim() ? (
-							<Text size="3" className="whitespace-pre-wrap leading-relaxed text-gray-400">
+							<Text
+								size="3"
+								className="whitespace-pre-wrap leading-relaxed text-gray-700 dark:text-gray-400"
+							>
 								{g.description.trim()}
 							</Text>
 						) : null}
 					</div>
 
 					<aside className="w-full shrink-0 lg:w-[360px] lg:sticky lg:top-6 lg:self-start">
-						<div className="flex flex-col gap-5 rounded-2xl border border-white/[0.08] bg-[#111114] p-5 shadow-lg shadow-black/25 md:p-6">
-							<div className="flex items-start gap-3 rounded-lg border border-white/[0.06] bg-white/[0.03] px-3.5 py-3">
-								<div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/[0.06] text-gray-400">
+						<div className="flex flex-col gap-5 rounded-2xl border border-black/15 bg-white ring-1 ring-black/[0.05] p-5 shadow-lg shadow-black/5 dark:border-white/[0.08] dark:bg-[#111114] dark:ring-white/[0.08] dark:shadow-black/25 md:p-6">
+							<div className="flex items-start gap-3 rounded-lg border border-black/10 bg-white ring-1 ring-black/[0.04] px-3.5 py-3 dark:border-white/[0.08] dark:bg-white/[0.03] dark:ring-white/[0.08]">
+								<div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-black/[0.05] text-gray-600 dark:bg-white/[0.06] dark:text-gray-400">
 									<Clock className="h-4 w-4" aria-hidden />
 								</div>
 								<div className="min-w-0">
-									<p className="text-[10px] font-medium uppercase tracking-wider text-gray-500">Ends</p>
-									<p className="mt-0.5 text-sm font-medium text-gray-100">
+									<p className="text-[10px] font-medium uppercase tracking-wider text-gray-600 dark:text-gray-500">
+										Ends
+									</p>
+									<p className="mt-0.5 text-sm font-medium text-gray-900 dark:text-gray-100">
 										{formatGiveawayEndsReadable(g.endTime)}
 									</p>
 								</div>
@@ -142,8 +151,8 @@ export function GiveawayDetailClient(props: {
 							</div>
 
 							{(g.requiredPassId || g.enforceAccountAge) && (
-								<div className="flex flex-col gap-2.5 border-t border-white/[0.06] pt-5">
-									<p className="text-[10px] font-medium uppercase tracking-wider text-gray-500">
+								<div className="flex flex-col gap-2.5 border-t border-black/10 pt-5 dark:border-white/[0.06]">
+									<p className="text-[10px] font-medium uppercase tracking-wider text-gray-600 dark:text-gray-500">
 										Requirements
 									</p>
 									{g.requiredPassId ? (
@@ -173,7 +182,7 @@ export function GiveawayDetailClient(props: {
 								</Text>
 							) : null}
 
-							<div className="border-t border-white/[0.06] pt-5">
+							<div className="border-t border-black/10 pt-5 dark:border-white/[0.06]">
 								<div className="flex flex-col gap-3">
 									{isAdmin ? (
 										<>

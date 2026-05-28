@@ -107,14 +107,14 @@ export default function GiveawayExperience({
 	}, [experienceId, access, giveaways]);
 
 	return (
-		<div className="flex min-h-screen flex-col bg-gray-900 text-gray-100">
+		<div className="flex min-h-screen flex-col bg-gray-50 text-gray-950 dark:bg-[#0d0d0f] dark:text-gray-100">
 			<WinnerConfettiOnLoad
 				experienceId={experienceId}
 				winIds={winIds}
 				enabled={access !== "admin" && !loading}
 			/>
-			<header className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-700 bg-gray-800 px-4 py-4 md:px-8">
-				<Heading as="h1" size="8" weight="bold" className="text-white">
+			<header className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-200 bg-white px-4 py-4 md:px-8 dark:border-white/10 dark:bg-[#0d0d0f] dark:text-gray-100">
+				<Heading as="h1" size="8" weight="bold" className="text-gray-950 dark:text-white">
 					Giveaways
 				</Heading>
 				<div className="flex flex-wrap items-center justify-end gap-3">
@@ -154,13 +154,16 @@ export default function GiveawayExperience({
 				</div>
 			</header>
 
-			<main className="flex flex-1 flex-col p-4 md:p-8">
+			<main className="flex flex-1 flex-col bg-gray-50 p-4 md:p-8 dark:bg-[#0d0d0f]">
 				{loading ? (
 					<div className="flex h-48 items-center justify-center">
 						<Spinner loading size="3" />
 					</div>
 				) : loadError ? (
-					<Card variant="surface" className="max-w-lg border-red-500/20 bg-red-500/10 p-6">
+					<Card
+						variant="surface"
+						className="max-w-lg border border-red-500/20 bg-red-500/10 p-6"
+					>
 						<Text size="3" color="red">
 							{loadError}
 						</Text>
@@ -170,14 +173,19 @@ export default function GiveawayExperience({
 						<div className="flex w-full max-w-sm flex-col items-stretch gap-6 text-center">
 							<div className="flex justify-center">
 								<div
-									className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/[0.06] ring-1 ring-white/[0.08]"
+									className="flex h-14 w-14 items-center justify-center rounded-2xl bg-black/[0.04] ring-1 ring-black/[0.06] dark:bg-white/[0.06] dark:ring-white/[0.08]"
 									aria-hidden
 								>
-									<Gift className="h-7 w-7 text-gray-400" strokeWidth={1.5} />
+									<Gift className="h-7 w-7 text-gray-500 dark:text-gray-400" strokeWidth={1.5} />
 								</div>
 							</div>
 							<div className="flex flex-col gap-2">
-								<Heading as="h2" size="5" weight="bold" className="text-balance text-white">
+								<Heading
+									as="h2"
+									size="5"
+									weight="bold"
+									className="text-balance text-gray-950 dark:text-white"
+								>
 									No giveaways yet
 								</Heading>
 								<Text size="3" color="gray" className="text-pretty leading-relaxed">

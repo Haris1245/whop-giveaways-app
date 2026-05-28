@@ -40,7 +40,7 @@ export function WinnerRow(props: {
 				/>
 				<div className="min-w-0">
 					<div className="flex flex-wrap items-center gap-2">
-						<Text as="p" size="3" weight="medium" className="truncate text-gray-50">
+						<Text as="p" size="3" weight="medium" className="truncate text-gray-900 dark:text-gray-50">
 							{formatUsername(props.username)}
 						</Text>
 						<Badge variant="soft" color="green" size="1" className="shrink-0 capitalize">

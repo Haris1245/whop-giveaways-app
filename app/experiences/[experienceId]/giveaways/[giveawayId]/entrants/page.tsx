@@ -90,12 +90,14 @@ function parsePageParam(raw: string | string[] | undefined): number {
 function StatItem({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
 	return (
 		<div className="flex items-center gap-3">
-			<div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/6 text-gray-400">
+			<div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-black/5 text-gray-600 dark:bg-white/6 dark:text-gray-400">
 				{icon}
 			</div>
 			<div>
-				<p className="text-[11px] font-medium uppercase tracking-wider text-gray-500">{label}</p>
-				<p className="text-sm font-medium text-gray-200">{value}</p>
+				<p className="text-[11px] font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">
+					{label}
+				</p>
+				<p className="text-sm font-semibold text-gray-900 dark:text-gray-100">{value}</p>
 			</div>
 		</div>
 	);
@@ -129,17 +131,19 @@ export default async function GiveawayEntrantsPage({
 
 	if (forbiddenMessage) {
 		return (
-			<div className="flex min-h-screen flex-col bg-[#0d0d0f]">
-				<header className="border-b border-white/6 bg-[#111114] px-6 py-6">
+			<div className="flex min-h-screen flex-col bg-white text-gray-900 dark:bg-[#0d0d0f] dark:text-gray-100">
+				<header className="border-b border-black/10 bg-white px-6 py-6 dark:border-white/10 dark:bg-[#111114]">
 					<BackLink href={giveawaysHref} label="All giveaways" />
 				</header>
 				<div className="flex flex-1 items-center justify-center p-6">
-					<div className="w-full max-w-sm rounded-2xl border border-white/8 bg-[#111114] p-8">
+					<div className="w-full max-w-sm rounded-2xl border border-black/10 bg-white p-8 dark:border-white/10 dark:bg-[#111114]">
 						<div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-red-500/10">
 							<Shield className="h-5 w-5 text-red-400" />
 						</div>
-						<p className="text-base font-semibold text-white">Admin only</p>
-						<p className="mt-1.5 text-sm leading-relaxed text-gray-500">{forbiddenMessage}</p>
+						<p className="text-base font-semibold text-gray-900 dark:text-white">Admin only</p>
+						<p className="mt-1.5 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+							{forbiddenMessage}
+						</p>
 					</div>
 				</div>
 			</div>
@@ -243,9 +247,9 @@ export default async function GiveawayEntrantsPage({
 	}
 
 	return (
-		<div className="flex min-h-screen flex-col bg-[#0d0d0f] text-gray-100">
+		<div className="flex min-h-screen flex-col bg-white text-gray-900 dark:bg-[#0d0d0f] dark:text-gray-100">
 			{/* ── Header ── */}
-			<header className="border-b border-white/6 bg-[#111114]">
+			<header className="border-b border-black/10 bg-white dark:border-white/10 dark:bg-[#111114]">
 				<div className="mx-auto max-w-5xl px-6 pb-8 pt-6">
 					<div className="mb-8">
 						<BackLink href={giveawaysHref} label="All giveaways" />
@@ -283,7 +287,7 @@ export default async function GiveawayEntrantsPage({
 					</div>
 
 					{/* Stat bar */}
-					<div className="mt-6 flex flex-wrap gap-6 border-t border-white/6 pt-6">
+					<div className="mt-6 flex flex-wrap gap-6 border-t border-black/10 pt-6 dark:border-white/10">
 						<StatItem
 							icon={<Clock className="h-4 w-4" />}
 							label="Ends"
@@ -342,8 +346,8 @@ export default async function GiveawayEntrantsPage({
 				<section className="space-y-3">
 					{totalEntrants === 0 ? (
 						<div className="flex flex-col items-center py-10 text-center">
-							<div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-white/5">
-								<Users className="h-5 w-5 text-gray-600" aria-hidden />
+							<div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-black/5 dark:bg-white/5">
+								<Users className="h-5 w-5 text-gray-500 dark:text-gray-400" aria-hidden />
 							</div>
 							<Heading as="h2" size="4" weight="semi-bold">
 								Entrants
@@ -393,7 +397,11 @@ export default async function GiveawayEntrantsPage({
 													<Table.Row
 														align="center"
 														key={e.id}
-														className={isWinner ? "bg-emerald-500/[0.07]" : undefined}
+														className={
+															isWinner
+																? "bg-emerald-500/10 dark:bg-emerald-500/[0.07]"
+																: undefined
+														}
 													>
 														<Table.Cell width={48} justify="center" className="tabular-nums">
 															<Text as="span" size="2" color="gray">

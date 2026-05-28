@@ -68,13 +68,16 @@ export function GiveawayHubCard(props: {
 
 	return (
 		<div
-			className={`group flex h-full flex-col overflow-hidden rounded-2xl border bg-white/[0.03] transition-colors duration-200 hover:bg-white/[0.05] ${
+			className={`group flex h-full flex-col overflow-hidden rounded-2xl border bg-white ring-1 ring-black/[0.06] transition-colors duration-200 hover:bg-gray-50 dark:bg-white/[0.03] dark:ring-white/[0.08] dark:hover:bg-white/[0.05] ${
 				isWinner
-					? "border-emerald-500/35 hover:border-emerald-500/45"
-					: "border-white/10 hover:border-white/[0.16]"
+					? "border-emerald-600/35 hover:border-emerald-600/50 dark:border-emerald-500/35 dark:hover:border-emerald-500/45"
+					: "border-black/10 hover:border-black/15 dark:border-white/10 dark:hover:border-white/[0.16]"
 			}`}
 		>
-			<Link href={props.detailHref} className="relative block aspect-video w-full overflow-hidden bg-gray-950">
+			<Link
+				href={props.detailHref}
+				className="relative block aspect-video w-full overflow-hidden bg-gray-100 dark:bg-gray-950"
+			>
 				{g.coverImageUrl ? (
 					<Image
 						src={g.coverImageUrl}
@@ -85,8 +88,8 @@ export function GiveawayHubCard(props: {
 						sizes="(max-width: 768px) 100vw, 33vw"
 					/>
 				) : (
-					<div className="flex h-full items-center justify-center bg-gradient-to-br from-violet-950/40 via-gray-900 to-gray-950">
-						<Gift className="h-10 w-10 text-white/20" aria-hidden />
+					<div className="flex h-full items-center justify-center bg-gradient-to-br from-violet-100 via-gray-50 to-white dark:from-violet-950/40 dark:via-gray-900 dark:to-gray-950">
+						<Gift className="h-10 w-10 text-black/20 dark:text-white/20" aria-hidden />
 					</div>
 				)}
 				<div
@@ -106,9 +109,12 @@ export function GiveawayHubCard(props: {
 						as="h3"
 						size="4"
 						weight="bold"
-						className="min-w-0 flex-1 leading-tight text-gray-50 line-clamp-2"
+						className="min-w-0 flex-1 leading-tight text-gray-950 dark:text-gray-50 line-clamp-2"
 					>
-						<Link href={props.detailHref} className="transition-colors hover:text-white">
+						<Link
+							href={props.detailHref}
+							className="transition-colors hover:text-black dark:hover:text-white"
+						>
 							{g.title}
 						</Link>
 					</Heading>
@@ -163,7 +169,7 @@ export function GiveawayHubCard(props: {
 					) : null}
 				</div>
 
-				<p className="mt-2 line-clamp-2 text-[13.5px] leading-relaxed text-gray-400">
+				<p className="mt-2 line-clamp-2 text-[13.5px] leading-relaxed text-gray-600 dark:text-gray-400">
 					{g.description}
 				</p>
 
@@ -184,23 +190,23 @@ export function GiveawayHubCard(props: {
 				) : null}
 
 				{/* Footer */}
-				<div className="mt-auto flex flex-col gap-3 border-t border-white/[0.08] pt-3.5">
+				<div className="mt-auto flex flex-col gap-3 border-t border-black/10 pt-3.5 dark:border-white/[0.08]">
 					{/* Meta row */}
 					<div className="flex items-center justify-between">
 						<div className="flex flex-col gap-0.5">
-							<span className="text-[10.5px] font-medium uppercase tracking-widest text-white/30">
+							<span className="text-[10.5px] font-medium uppercase tracking-widest text-black/40 dark:text-white/30">
 								Ends
 							</span>
-							<span className="text-[13px] font-medium text-gray-300">
+							<span className="text-[13px] font-medium text-gray-700 dark:text-gray-300">
 								{formatGiveawayEndsReadable(g.endTime)}
 							</span>
 						</div>
-						<div className="h-7 w-px bg-white/[0.08]" aria-hidden />
+						<div className="h-7 w-px bg-black/[0.08] dark:bg-white/[0.08]" aria-hidden />
 						<div className="flex flex-col items-end gap-0.5">
-							<span className="text-[10.5px] font-medium uppercase tracking-widest text-white/30">
+							<span className="text-[10.5px] font-medium uppercase tracking-widest text-black/40 dark:text-white/30">
 								Entrants
 							</span>
-							<span className="tabular-nums text-[13px] font-medium text-gray-300">
+							<span className="tabular-nums text-[13px] font-medium text-gray-700 dark:text-gray-300">
 								{entrantCount.toLocaleString()}
 							</span>
 						</div>

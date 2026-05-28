@@ -1,10 +1,11 @@
 import React from "react";
-import { WhopApp } from "@whop/react/components";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Theme } from "frosted-ui";
 import "frosted-ui/styles.css";
+import { Theme as FrostedTheme } from "frosted-ui";
+import { WhopIframeSdkProvider } from "@whop/react/iframe";
+import { WhopThemeBootstrapper } from "@/components/whop-theme-bootstrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,9 +32,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Theme>
-          <WhopApp>{children}</WhopApp>
-        </Theme>
+        <WhopThemeBootstrapper />
+        <WhopIframeSdkProvider>
+          <FrostedTheme appearance="inherit">{children}</FrostedTheme>
+        </WhopIframeSdkProvider>
       </body>
     </html>
   );

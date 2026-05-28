@@ -131,7 +131,7 @@ const BillingForm = ({
 						<div key={key} className="relative flex-1">
 							<Card
 								variant="surface"
-								className="relative h-full overflow-hidden border-0 transition-all duration-300 hover:shadow-2xl"
+								className="relative h-full overflow-hidden border border-black/10 bg-white ring-1 ring-black/[0.05] transition-all duration-300 hover:border-black/15 hover:shadow-2xl dark:border-white/10 dark:bg-[#111114] dark:ring-white/[0.08] dark:hover:border-white/[0.16]"
 							>
 								<div className="relative flex h-full flex-col gap-3 p-8">
 									{details.popular ? (

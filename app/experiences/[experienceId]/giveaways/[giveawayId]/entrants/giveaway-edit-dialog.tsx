@@ -308,11 +308,11 @@ export function GiveawayEditDialog(props: {
 				<form onSubmit={submitPatch} className="flex min-h-0 flex-1 flex-col overflow-hidden">
 					<ScrollArea scrollbars="vertical" className="min-h-0 flex-1">
 						<div className="flex flex-col gap-5 px-4 py-4">
-							<div className="border-b border-white/[0.06] pb-4 pr-8">
+							<div className="border-b border-black/10 pb-4 pr-8 dark:border-white/10">
 								<Dialog.Title className="!mb-2 text-balance">
 									Edit giveaway
 								</Dialog.Title>
-								<Dialog.Description size="2" className="!mb-0 text-gray-400">
+								<Dialog.Description size="2" className="!mb-0 text-gray-700 dark:text-gray-400">
 									Adjust how this giveaway looks and behaves — prize details can’t be changed
 									here.
 								</Dialog.Description>
@@ -334,14 +334,14 @@ export function GiveawayEditDialog(props: {
 									size="4"
 									weight="semi-bold"
 									id="edit-reward-heading"
-									className="text-gray-100"
+									className="text-gray-900 dark:text-gray-100"
 								>
 									Reward
 								</Heading>
 								<Text size="1" color="gray">
 									Locked after creation — shown to members on the giveaway page.
 								</Text>
-								<Text size="2" weight="medium" className="text-gray-50">
+								<Text size="2" weight="medium" className="text-gray-900 dark:text-gray-50">
 									{rewardSummaryLine(props.rewardText)}
 								</Text>
 							</section>
@@ -349,7 +349,7 @@ export function GiveawayEditDialog(props: {
 							<Separator size="4" />
 
 							<section aria-labelledby="overview-heading" className="flex flex-col gap-3">
-								<Heading as="h3" size="4" weight="semi-bold" id="overview-heading" className="text-gray-100">
+								<Heading as="h3" size="4" weight="semi-bold" id="overview-heading" className="text-gray-900 dark:text-gray-100">
 									Overview
 								</Heading>
 								<div className="flex flex-col gap-4">
@@ -387,7 +387,7 @@ export function GiveawayEditDialog(props: {
 							<Separator size="4" />
 
 							<section className="flex flex-col gap-3" aria-labelledby="cover-heading">
-								<Heading as="h3" size="4" weight="semi-bold" id="cover-heading" className="text-gray-100">
+								<Heading as="h3" size="4" weight="semi-bold" id="cover-heading" className="text-gray-900 dark:text-gray-100">
 									Cover
 								</Heading>
 								<Text size="1" color="gray">
@@ -414,7 +414,7 @@ export function GiveawayEditDialog(props: {
 								/>
 								<div className="grid gap-4 sm:grid-cols-[minmax(140px,160px)_1fr] sm:items-start">
 									{displayedCoverSrc ? (
-										<div className="relative aspect-video w-full max-w-[200px] overflow-hidden rounded-xl border border-white/10 bg-gray-950 sm:mx-0 mx-auto">
+										<div className="relative aspect-video w-full max-w-[200px] overflow-hidden rounded-xl border border-black/10 bg-gray-100 dark:border-white/10 dark:bg-gray-950 sm:mx-0 mx-auto">
 											<Image
 												src={displayedCoverSrc}
 												alt=""
@@ -427,7 +427,7 @@ export function GiveawayEditDialog(props: {
 										<button
 											type="button"
 											onClick={() => coverInputRef.current?.click()}
-											className="flex aspect-video max-h-28 max-w-[200px] w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-white/15 bg-white/[0.02] px-3 text-center text-gray-500 transition-colors hover:border-white/25 hover:bg-white/[0.04] hover:text-gray-400 sm:mx-0 mx-auto"
+											className="flex aspect-video max-h-28 max-w-[200px] w-full cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-black/20 bg-black/[0.02] px-3 text-center text-gray-600 transition-colors hover:border-black/30 hover:bg-black/[0.04] hover:text-gray-700 dark:border-white/15 dark:bg-white/[0.02] dark:text-gray-500 dark:hover:border-white/25 dark:hover:bg-white/[0.04] dark:hover:text-gray-400 sm:mx-0 mx-auto"
 										>
 											<ImageIcon className="h-6 w-6 opacity-50" aria-hidden />
 											<Text size="1">No cover</Text>
@@ -475,7 +475,7 @@ export function GiveawayEditDialog(props: {
 							<Separator size="4" />
 
 							<section className="flex flex-col gap-3" aria-labelledby="schedule-heading">
-								<Heading as="h3" size="4" weight="semi-bold" id="schedule-heading" className="text-gray-100">
+								<Heading as="h3" size="4" weight="semi-bold" id="schedule-heading" className="text-gray-900 dark:text-gray-100">
 									Schedule
 								</Heading>
 								<div className="flex flex-col gap-2">
@@ -501,7 +501,7 @@ export function GiveawayEditDialog(props: {
 							<Separator size="4" />
 
 							<section className="flex flex-col gap-3" aria-labelledby="access-heading">
-								<Heading as="h3" size="4" weight="semi-bold" id="access-heading" className="text-gray-100">
+								<Heading as="h3" size="4" weight="semi-bold" id="access-heading" className="text-gray-900 dark:text-gray-100">
 									Who can enter
 								</Heading>
 								<Text size="1" color="gray" id="edit-pass-hint">
@@ -509,7 +509,7 @@ export function GiveawayEditDialog(props: {
 								</Text>
 								{passesLoading ? (
 									<div
-										className="flex h-12 items-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-3"
+										className="flex h-12 items-center gap-2 rounded-xl border border-black/10 bg-black/[0.02] px-3 dark:border-white/10 dark:bg-white/[0.03]"
 										aria-busy="true"
 									>
 										<Spinner loading size="1" />
@@ -559,14 +559,14 @@ export function GiveawayEditDialog(props: {
 								<Accordion.Root type="single" collapsible>
 									<Accordion.Item
 										value="security"
-										className="overflow-hidden rounded-xl border border-white/10 bg-white/[0.03]"
+										className="overflow-hidden rounded-xl border border-black/10 bg-black/[0.02] dark:border-white/10 dark:bg-white/[0.03]"
 									>
 										<Accordion.Trigger
 											id="edit-security-rules-heading"
-											className="w-full px-4 py-3 text-left hover:bg-white/[0.03]"
+											className="w-full px-4 py-3 text-left hover:bg-black/[0.03] dark:hover:bg-white/[0.03]"
 										>
 											<div className="flex w-full items-center justify-between gap-3">
-												<Text size="3" weight="semi-bold" className="text-gray-100">
+												<Text size="3" weight="semi-bold" className="text-gray-900 dark:text-gray-100">
 													Security features
 												</Text>
 												{!securityFeatures ? (
@@ -577,7 +577,7 @@ export function GiveawayEditDialog(props: {
 											</div>
 										</Accordion.Trigger>
 										<Accordion.Content>
-											<div className="flex flex-col gap-4 border-t border-white/[0.06] px-4 pb-4 pt-3">
+											<div className="flex flex-col gap-4 border-t border-black/10 px-4 pb-4 pt-3 dark:border-white/10">
 												{!securityFeatures ? (
 													<div className="flex flex-col gap-3">
 														<Text size="2" color="gray" className="leading-relaxed">
@@ -636,7 +636,7 @@ export function GiveawayEditDialog(props: {
 																aria-labelledby="edit-ip-label"
 															/>
 														</div>
-														<div className="flex flex-col gap-3 border-t border-white/[0.06] pt-4">
+														<div className="flex flex-col gap-3 border-t border-black/10 pt-4 dark:border-white/10">
 															<div className="flex items-center justify-between gap-3">
 																<div className="min-w-0 flex flex-col gap-0.5">
 																	<Text size="2" id="edit-age-enf-label" weight="medium">
@@ -679,7 +679,7 @@ export function GiveawayEditDialog(props: {
 						</div>
 					</ScrollArea>
 
-					<div className="flex shrink-0 flex-wrap items-center justify-between gap-x-3 gap-y-2 border-t border-white/[0.06] px-4 py-3">
+					<div className="flex shrink-0 flex-wrap items-center justify-between gap-x-3 gap-y-2 border-t border-black/10 px-4 py-3 dark:border-white/10">
 						<Text
 							size="1"
 							color="gray"
