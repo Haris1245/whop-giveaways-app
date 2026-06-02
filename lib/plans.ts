@@ -2,8 +2,8 @@ export type PlanType = "free" | "pro";
 
 export const plans = {
 	pro: {
-		passId: "prod_pvkSR3y5Lgh0b",
-		planId: "plan_x4kGAXQmFouNH",
+		passId: "prod_pokFamUQ1dcGS",
+		planId: "plan_ktdOqx7sx3g1h",
 		priceLifetime: 25,
 	},
 } as const;
