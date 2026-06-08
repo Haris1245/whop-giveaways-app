@@ -1,17 +1,14 @@
 import type { ComponentProps } from "react";
 import { Badge } from "frosted-ui";
+import {
+	formatLocalDateTime,
+	GIVEAWAY_END_DATETIME_FORMAT,
+} from "@/lib/format-datetime";
 import type { GiveawayRow } from "./giveaway-hub-types";
 
-/** Full spelled-out date + time + local timezone abbreviation. */
+/** End time in the viewer's local timezone (use in client components). */
 export function formatGiveawayEndsReadable(iso: string): string {
-	const d = new Date(iso);
-	if (Number.isNaN(d.getTime())) return iso;
-	return new Intl.DateTimeFormat(undefined, {
-		month: "short",
-		day: "numeric",
-		hour: "numeric",
-		minute: "2-digit",
-	}).format(d);
+	return formatLocalDateTime(iso, GIVEAWAY_END_DATETIME_FORMAT);
 }
 
 export function statusTone(

@@ -7,13 +7,14 @@ import { useState } from "react";
 import { Badge, Button, Heading, Text } from "frosted-ui";
 import { CheckCircle, Clock, Loader2, Ticket, Trophy, Users } from "lucide-react";
 import { BackLink } from "@/components/back-link";
+import { FormattedDateTime } from "@/components/formatted-datetime";
 import { WinnerConfettiOnLoad } from "@/components/winner-confetti";
 import { whopDevAwareFetch } from "@/lib/append-whop-dev-user-token";
+import { GIVEAWAY_END_DATETIME_FORMAT } from "@/lib/format-datetime";
 import type { GiveawayRow } from "../../giveaway-hub-types";
 import {
 	adminEntrantsButtonLabel,
 	closedGiveawayMessage,
-	formatGiveawayEndsReadable,
 	giveawayAcceptsEntries,
 	statusTone,
 } from "../../giveaway-hub-utils";
@@ -140,7 +141,7 @@ export function GiveawayDetailClient(props: {
 										Ends
 									</p>
 									<p className="mt-0.5 text-sm font-medium text-gray-900 dark:text-gray-100">
-										{formatGiveawayEndsReadable(g.endTime)}
+										<FormattedDateTime iso={g.endTime} options={GIVEAWAY_END_DATETIME_FORMAT} />
 									</p>
 								</div>
 							</div>

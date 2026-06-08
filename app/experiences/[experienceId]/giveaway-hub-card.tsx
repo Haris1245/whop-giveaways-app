@@ -6,11 +6,12 @@ import { useState, type ReactNode } from "react";
 import { AlertDialog, Badge, Button, DropdownMenu, Heading, IconButton, Text } from "frosted-ui";
 import { CheckCircle, Gift, Loader2, MoreHorizontal, Ticket, Trash2, Trophy, Users } from "lucide-react";
 import { whopDevAwareFetch } from "@/lib/append-whop-dev-user-token";
+import { FormattedDateTime } from "@/components/formatted-datetime";
+import { GIVEAWAY_END_DATETIME_FORMAT } from "@/lib/format-datetime";
 import type { GiveawayRow } from "./giveaway-hub-types";
 import {
 	adminEntrantsButtonLabel,
 	closedGiveawayMessage,
-	formatGiveawayEndsReadable,
 	giveawayAcceptsEntries,
 } from "./giveaway-hub-utils";
 
@@ -198,7 +199,7 @@ export function GiveawayHubCard(props: {
 								Ends
 							</span>
 							<span className="text-[13px] font-medium text-gray-700 dark:text-gray-300">
-								{formatGiveawayEndsReadable(g.endTime)}
+								<FormattedDateTime iso={g.endTime} options={GIVEAWAY_END_DATETIME_FORMAT} />
 							</span>
 						</div>
 						<div className="h-7 w-px bg-black/[0.08] dark:bg-white/[0.08]" aria-hidden />

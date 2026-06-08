@@ -2,6 +2,7 @@
 
 import { Avatar, Badge, Button, Text } from "frosted-ui";
 import { MessageSquare, Trophy } from "lucide-react";
+import { FormattedDateTime } from "@/components/formatted-datetime";
 import { whopMessageHref } from "@/lib/whop-message-href";
 
 function usernameToInitials(username: string): string {
@@ -22,7 +23,7 @@ export function WinnerRow(props: {
 	username: string;
 	displayName: string | null;
 	profilePictureUrl: string | null;
-	pickedAtLabel: string;
+	pickedAtIso: string | null;
 }) {
 	const chatHref = whopMessageHref(props.username);
 	const handle = props.username.replace(/^@/, "").trim();
@@ -54,7 +55,7 @@ export function WinnerRow(props: {
 						</Text>
 					) : null}
 					<Text as="p" size="1" color="gray" className="mt-1">
-						Drawn {props.pickedAtLabel}
+						Drawn <FormattedDateTime iso={props.pickedAtIso} />
 					</Text>
 				</div>
 			</div>

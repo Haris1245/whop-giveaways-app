@@ -4,8 +4,9 @@ import { useState } from "react";
 import { Button, Dialog, Text } from "frosted-ui";
 import { Clock, Loader2, Ticket } from "lucide-react";
 import { whopDevAwareFetch } from "@/lib/append-whop-dev-user-token";
+import { FormattedDateTime } from "@/components/formatted-datetime";
+import { GIVEAWAY_END_DATETIME_FORMAT } from "@/lib/format-datetime";
 import type { GiveawayRow } from "./giveaway-hub-types";
-import { formatGiveawayEndsReadable } from "./giveaway-hub-utils";
 
 function prizeLabel(g: GiveawayRow): string | null {
 	const t = g.rewardText?.trim();
@@ -55,7 +56,11 @@ export function JoinGiveawayDialog(props: {
 							</Dialog.Title>
 							<Text size="2" className="flex items-center gap-1.5 text-gray-600 dark:text-gray-400">
 								<Clock className="h-3.5 w-3.5 shrink-0" aria-hidden />
-								Ends {formatGiveawayEndsReadable(joinTarget.endTime)}
+								Ends{" "}
+								<FormattedDateTime
+									iso={joinTarget.endTime}
+									options={GIVEAWAY_END_DATETIME_FORMAT}
+								/>
 							</Text>
 						</div>
 

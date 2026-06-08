@@ -23,7 +23,8 @@ import {
 import { and, count, desc, eq } from "drizzle-orm";
 import { CalendarDays, Clock, Shield, Trophy, Users } from "lucide-react";
 import { BackLink } from "@/components/back-link";
-import { formatGiveawayEndsReadable } from "../../../giveaway-hub-utils";
+import { FormattedDateTime } from "@/components/formatted-datetime";
+import { GIVEAWAY_END_DATETIME_FORMAT } from "@/lib/format-datetime";
 import { EntrantRowActions } from "./entrant-row-actions";
 import { GiveawayEditDialog } from "./giveaway-edit-dialog";
 import { WinnerRow } from "./winner-row";
@@ -40,17 +41,6 @@ function formatUsername(username: string): string {
 	const t = username.trim();
 	if (!t) return "@unknown";
 	return t.startsWith("@") ? t : `@${t}`;
-}
-
-function formatWhen(d: Date | null): string {
-	if (!d) return "—";
-	return d.toLocaleString(undefined, {
-		month: "short",
-		day: "numeric",
-		year: "numeric",
-		hour: "numeric",
-		minute: "2-digit",
-	});
 }
 
 function statusVariant(status: string): NonNullable<ComponentProps<typeof Badge>["color"]> {
@@ -87,7 +77,7 @@ function parsePageParam(raw: string | string[] | undefined): number {
 	return n;
 }
 
-function StatItem({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+function StatItem({ icon, label, value }: { icon: React.ReactNode; label: string; value: React.ReactNode }) {
 	return (
 		<div className="flex items-center gap-3">
 			<div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-black/5 text-gray-600 dark:bg-white/6 dark:text-gray-400">
@@ -291,14 +281,21 @@ export default async function GiveawayEntrantsPage({
 						<StatItem
 							icon={<Clock className="h-4 w-4" />}
 							label="Ends"
-							value={formatGiveawayEndsReadable(
-								(gw.endTime ?? new Date(0)).toISOString(),
-							)}
+							value={
+								<FormattedDateTime
+									iso={(gw.endTime ?? new Date(0)).toISOString()}
+									options={GIVEAWAY_END_DATETIME_FORMAT}
+								/>
+							}
 						/>
 						<StatItem icon={<Users className="h-4 w-4" />} label="Entrants" value={String(totalEntrants)} />
 						<StatItem icon={<Trophy className="h-4 w-4" />} label="Winner" value={gw.winnerUserId ? "Drawn" : "Not drawn yet"} />
 						{gw.createdAt ? (
-							<StatItem icon={<CalendarDays className="h-4 w-4" />} label="Created" value={formatWhen(gw.createdAt)} />
+							<StatItem
+								icon={<CalendarDays className="h-4 w-4" />}
+								label="Created"
+								value={<FormattedDateTime iso={gw.createdAt.toISOString()} />}
+							/>
 						) : null}
 					</div>
 				</div>
@@ -321,7 +318,7 @@ export default async function GiveawayEntrantsPage({
 							username={winnerMember.username}
 							displayName={winnerMember.displayName}
 							profilePictureUrl={winnerMember.profilePictureUrl}
-							pickedAtLabel={formatWhen(gw.winnerPickedAt)}
+							pickedAtIso={gw.winnerPickedAt?.toISOString() ?? null}
 						/>
 					) : gw.winnerUserId ? (
 						<div className="py-2">
@@ -332,7 +329,7 @@ export default async function GiveawayEntrantsPage({
 								{gw.winnerUserId}
 							</Code>
 							<Text as="p" size="1" color="gray" className="mt-2">
-								Drawn {formatWhen(gw.winnerPickedAt)}
+								Drawn <FormattedDateTime iso={gw.winnerPickedAt?.toISOString()} />
 							</Text>
 						</div>
 					) : (
@@ -460,12 +457,12 @@ export default async function GiveawayEntrantsPage({
 														</Table.Cell>
 														<Table.Cell className="hidden whitespace-nowrap lg:table-cell">
 															<Text as="span" size="2" color="gray">
-																{formatWhen(e.whopAccountCreatedAt)}
+																<FormattedDateTime iso={e.whopAccountCreatedAt?.toISOString()} />
 															</Text>
 														</Table.Cell>
 														<Table.Cell className="whitespace-nowrap">
 															<Text as="span" size="2" color="gray">
-																{formatWhen(e.enteredAt)}
+																<FormattedDateTime iso={e.enteredAt.toISOString()} />
 															</Text>
 														</Table.Cell>
 														
