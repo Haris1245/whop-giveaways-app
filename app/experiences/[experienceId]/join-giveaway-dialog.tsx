@@ -33,8 +33,7 @@ export function JoinGiveawayDialog(props: {
 	};
 
 	const hasEntryRequirements = Boolean(
-		joinTarget &&
-			(joinTarget.requiredPassId || joinTarget.enforceAccountAge),
+		joinTarget && joinTarget.enforceAccountAge,
 	);
 
 	return (
@@ -90,39 +89,17 @@ export function JoinGiveawayDialog(props: {
 						) : null}
 
 						{/* Requirements */}
-						{(joinTarget.requiredPassId || joinTarget.enforceAccountAge) ? (
+						{joinTarget.enforceAccountAge ? (
 							<div className="flex flex-col gap-2">
 								<Text size="2" weight="medium" className="text-gray-900 dark:text-gray-300">
 									Requirements
 								</Text>
 								<ul className="flex flex-col gap-1.5 pl-4 list-disc marker:text-gray-500 dark:marker:text-gray-600">
-									{joinTarget.requiredPassId ? (
-										<li>
-											<Text size="2" className="text-gray-700 dark:text-gray-400 leading-snug">
-												{joinTarget.requiredPassTitle ? (
-													<>
-														You need an active Whop pass, membership, or product that includes{" "}
-														<span className="text-gray-900 dark:text-gray-200">
-															&quot;{joinTarget.requiredPassTitle}&quot;
-														</span>{" "}
-														to enter.
-													</>
-												) : (
-													<>
-														You need an active Whop pass, product purchase, or membership (as chosen by
-														the creator) to enter.
-													</>
-												)}
-											</Text>
-										</li>
-									) : null}
-									{joinTarget.enforceAccountAge ? (
-										<li>
-											<Text size="2" className="text-gray-700 dark:text-gray-400 leading-snug">
-												Account must be at least {joinTarget.minAccountAgeDays ?? "?"} days old.
-											</Text>
-										</li>
-									) : null}
+									<li>
+										<Text size="2" className="text-gray-700 dark:text-gray-400 leading-snug">
+											Account must be at least {joinTarget.minAccountAgeDays ?? "?"} days old.
+										</Text>
+									</li>
 								</ul>
 							</div>
 						) : null}

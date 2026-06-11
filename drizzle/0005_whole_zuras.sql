@@ -1,0 +1,1 @@
+ALTER TABLE "giveaway" DROP COLUMN "required_pass_id";

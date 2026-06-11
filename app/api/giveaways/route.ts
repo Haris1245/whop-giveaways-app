@@ -60,39 +60,15 @@ export async function GET(req: NextRequest) {
 
 		const enteredSet = new Set(enteredRows.map((r) => r.giveawayId));
 
-		const passTitleById = new Map<string, string>();
-		const needsPassTitles = rows.some((r) => r.requiredPassId != null && r.requiredPassId !== "");
-		if (needsPassTitles) {
-			try {
-				const experience = await whopSdk.experiences.listAccessPassesForExperience({
-					experienceId,
-				});
-				for (const p of experience?.accessPasses ?? []) {
-					if (typeof p.id === "string" && p.id !== "") {
-						const title = typeof p.title === "string" && p.title.trim() !== "" ? p.title.trim() : null;
-						passTitleById.set(p.id, title ?? p.id);
-					}
-				}
-			} catch {
-				// Pass title is optional UI; list still succeeds.
-			}
-		}
-
-		const giveaways = rows.map((row) => {
-			const passId = row.requiredPassId;
-			const requiredPassTitle =
-				passId != null && passId !== "" ? passTitleById.get(passId) ?? null : null;
-			return {
-				...row,
-				entrantCount: countById.get(row.id) ?? 0,
-				entered: enteredSet.has(row.id),
-				requiredPassTitle,
-				isWinner:
-					row.status === "completed" &&
-					row.winnerUserId != null &&
-					row.winnerUserId === userId,
-			};
-		});
+		const giveaways = rows.map((row) => ({
+			...row,
+			entrantCount: countById.get(row.id) ?? 0,
+			entered: enteredSet.has(row.id),
+			isWinner:
+				row.status === "completed" &&
+				row.winnerUserId != null &&
+				row.winnerUserId === userId,
+		}));
 
 		return NextResponse.json({ giveaways });
 	} catch (e: unknown) {
@@ -128,10 +104,6 @@ export async function POST(req: NextRequest) {
 		typeof body.description === "string" ? body.description.trim() : "";
 	const rewardText =
 		typeof body.rewardText === "string" ? body.rewardText.trim() : undefined;
-	const requiredPassId =
-		typeof body.requiredPassId === "string" && body.requiredPassId.trim() !== ""
-			? body.requiredPassId.trim()
-			: null;
 	const minAccountAgeDays =
 		typeof body.minAccountAgeDays === "number" && Number.isFinite(body.minAccountAgeDays)
 			? Math.max(0, Math.floor(body.minAccountAgeDays))
@@ -232,7 +204,6 @@ export async function POST(req: NextRequest) {
 			description,
 			coverImageUrl,
 			rewardText,
-			requiredPassId,
 			minAccountAgeDays: security.minAccountAgeDays,
 			enforceIpChecks: security.enforceIpChecks,
 			enforceAccountAge: security.enforceAccountAge,

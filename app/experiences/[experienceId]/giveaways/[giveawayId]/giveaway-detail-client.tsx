@@ -19,7 +19,7 @@ import {
 	statusTone,
 } from "../../giveaway-hub-utils";
 
-type DetailGiveaway = GiveawayRow & { requiredPassTitle?: string | null };
+type DetailGiveaway = GiveawayRow;
 
 function StatCard({ label, value }: { label: string; value: string }) {
 	return (
@@ -151,31 +151,16 @@ export function GiveawayDetailClient(props: {
 								<StatCard label="Entrants" value={(g.entrantCount ?? 0).toLocaleString()} />
 							</div>
 
-							{(g.requiredPassId || g.enforceAccountAge) && (
-								<div className="flex flex-col gap-2.5 border-t border-black/10 pt-5 dark:border-white/[0.06]">
-									<p className="text-[10px] font-medium uppercase tracking-wider text-gray-600 dark:text-gray-500">
-										Requirements
-									</p>
-									{g.requiredPassId ? (
-										<Badge
-											variant="soft"
-											color="gray"
-											size="1"
-											className="inline-flex w-fit max-w-full items-center gap-1.5 py-1 pl-1.5 pr-2.5 font-normal normal-case tracking-normal"
-										>
-											<Ticket className="h-3 w-3 shrink-0 opacity-70" aria-hidden />
-											<span className="truncate">
-												{g.requiredPassTitle ?? "Pass or membership required"}
-											</span>
-										</Badge>
-									) : null}
-									{g.enforceAccountAge ? (
-										<Text size="2" color="gray">
-											Account must be at least {g.minAccountAgeDays ?? "?"} days old.
-										</Text>
-									) : null}
-								</div>
-							)}
+						{g.enforceAccountAge && (
+							<div className="flex flex-col gap-2.5 border-t border-black/10 pt-5 dark:border-white/[0.06]">
+								<p className="text-[10px] font-medium uppercase tracking-wider text-gray-600 dark:text-gray-500">
+									Requirements
+								</p>
+								<Text size="2" color="gray">
+									Account must be at least {g.minAccountAgeDays ?? "?"} days old.
+								</Text>
+							</div>
+						)}
 
 							{joinError ? (
 								<Text size="2" color="red">

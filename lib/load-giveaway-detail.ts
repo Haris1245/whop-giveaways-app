@@ -3,7 +3,6 @@ import "server-only";
 import { db } from "@/db";
 import { entrantTable, giveawayTable } from "@/db/schema";
 import { syncPastDueGiveaways } from "@/lib/expire-giveaways";
-import { whopSdk } from "@/lib/whop-sdk";
 import type { GiveawayRow } from "@/app/experiences/[experienceId]/giveaway-hub-types";
 import { and, count, eq } from "drizzle-orm";
 
@@ -11,7 +10,7 @@ export async function loadGiveawayDetail(
 	experienceId: string,
 	giveawayId: string,
 	userId: string,
-): Promise<(GiveawayRow & { requiredPassTitle: string | null }) | null> {
+): Promise<GiveawayRow | null> {
 	await syncPastDueGiveaways(experienceId, { giveawayId });
 
 	const rows = await db
@@ -44,26 +43,6 @@ export async function loadGiveawayDetail(
 		)
 		.limit(1);
 
-	let requiredPassTitle: string | null = null;
-	if (row.requiredPassId) {
-		try {
-			const experience = await whopSdk.experiences.listAccessPassesForExperience({
-				experienceId,
-			});
-			for (const p of experience?.accessPasses ?? []) {
-				if (p.id === row.requiredPassId) {
-					requiredPassTitle =
-						typeof p.title === "string" && p.title.trim() !== ""
-							? p.title.trim()
-							: null;
-					break;
-				}
-			}
-		} catch {
-			// Optional UI enrichment.
-		}
-	}
-
 	return {
 		id: row.id,
 		experienceId: row.experienceId,
@@ -71,8 +50,6 @@ export async function loadGiveawayDetail(
 		description: row.description,
 		coverImageUrl: row.coverImageUrl,
 		rewardText: row.rewardText,
-		requiredPassId: row.requiredPassId,
-		requiredPassTitle,
 		status: row.status,
 		endTime: row.endTime.toISOString(),
 		createdAt: row.createdAt.toISOString(),

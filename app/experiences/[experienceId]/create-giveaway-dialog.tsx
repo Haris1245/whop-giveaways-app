@@ -7,7 +7,6 @@ import {
 	Accordion,
 	Badge,
 	Button,
-	Card,
 	Dialog,
 	Heading,
 	ScrollArea,
@@ -15,8 +14,6 @@ import {
 	Text,
 	TextArea,
 	TextField,
-	Spinner,
-	Select,
 	Switch,
 } from "frosted-ui";
 import { useIframeSdk } from "@whop/react/iframe";
@@ -29,8 +26,6 @@ import {
 } from "@/lib/append-whop-dev-user-token";
 import { formatCheckoutError } from "@/lib/checkout-errors";
 import { plans } from "@/lib/plans";
-import type { AccessPassOption } from "./giveaway-hub-types";
-import { NONE_PASS_VALUE } from "./giveaway-hub-types";
 
 export function CreateGiveawayDialog(props: {
 	experienceId: string;
@@ -49,10 +44,6 @@ export function CreateGiveawayDialog(props: {
 	const [coverPreviewUrl, setCoverPreviewUrl] = useState<string | null>(null);
 	const coverInputRef = React.useRef<HTMLInputElement>(null);
 	const [rewardText, setRewardText] = useState("");
-	const [requiredPassId, setRequiredPassId] = useState("");
-	const [passes, setPasses] = useState<AccessPassOption[]>([]);
-	const [passesLoading, setPassesLoading] = useState(false);
-	const [passesError, setPassesError] = useState<string | null>(null);
 	const [enforceIpChecks, setEnforceIpChecks] = useState(false);
 	const [enforceAccountAge, setEnforceAccountAge] = useState(false);
 	const [minAccountAgeDays, setMinAccountAgeDays] = useState("7");
@@ -77,8 +68,6 @@ export function CreateGiveawayDialog(props: {
 		setCoverPreviewUrl(null);
 		if (coverInputRef.current) coverInputRef.current.value = "";
 		setRewardText("");
-		setRequiredPassId("");
-		setPassesError(null);
 		setEnforceIpChecks(false);
 		setEnforceAccountAge(false);
 		setMinAccountAgeDays("7");
@@ -142,36 +131,7 @@ export function CreateGiveawayDialog(props: {
 			}
 		}
 
-		async function loadPasses() {
-			setPassesLoading(true);
-			setPassesError(null);
-			try {
-				const res = await whopDevAwareFetch(
-					`/api/access-passes?experienceId=${encodeURIComponent(props.experienceId)}`,
-				);
-				const data = await res.json();
-				if (!res.ok) {
-					if (!cancelled) {
-						setPassesError(data.error ?? "Could not load passes");
-						setPasses([]);
-					}
-					return;
-				}
-				if (!cancelled) {
-					setPasses((data.passes ?? []) as AccessPassOption[]);
-				}
-			} catch {
-				if (!cancelled) {
-					setPassesError("Could not load passes");
-					setPasses([]);
-				}
-			} finally {
-				if (!cancelled) setPassesLoading(false);
-			}
-		}
-
 		void loadPlanLimits();
-		void loadPasses();
 		return () => {
 			cancelled = true;
 		};
@@ -234,7 +194,6 @@ export function CreateGiveawayDialog(props: {
 					description,
 					coverImageUrl,
 					rewardText,
-					requiredPassId: requiredPassId.trim() || undefined,
 					minAccountAgeDays: enforceAccountAge ? minDays : 0,
 					enforceIpChecks,
 					enforceAccountAge,
@@ -486,64 +445,9 @@ export function CreateGiveawayDialog(props: {
 								</div>
 							</section>
 
-							<Separator size="4" />
+						<Separator size="4" />
 
-							<section className="flex flex-col gap-3" aria-labelledby="create-access-heading">
-								<Heading
-									as="h3"
-									size="4"
-									weight="semi-bold"
-									id="create-access-heading"
-									className="text-gray-100"
-								>
-									Who can enter
-								</Heading>
-								<Text size="1" color="gray" id="g-pass-hint">
-									Optional Whop pass — or leave open to anyone with hub access.
-								</Text>
-								{passesLoading ? (
-									<div
-										className="flex h-12 items-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-3"
-										aria-busy="true"
-									>
-										<Spinner loading size="1" />
-										<Text size="2" color="gray">
-											Loading passes…
-										</Text>
-									</div>
-								) : passesError ? (
-									<Text size="2" color="amber" as="div">
-										{passesError}. Close and reopen this dialog to retry.
-									</Text>
-								) : (
-									<Select.Root
-										size="3"
-										value={requiredPassId.trim() === "" ? NONE_PASS_VALUE : requiredPassId.trim()}
-										onValueChange={(value) =>
-											setRequiredPassId(value === NONE_PASS_VALUE ? "" : value)
-										}
-									>
-										<Select.Trigger
-											className="w-full min-w-0"
-											variant="surface"
-											placeholder="Open to everyone with experience access"
-											aria-describedby="g-pass-hint"
-										/>
-										<Select.Content position="popper">
-											<Select.Item value={NONE_PASS_VALUE}>No pass required</Select.Item>
-											{passes.map((p) => (
-												<Select.Item key={p.id} value={p.id}>
-													{p.title}
-												</Select.Item>
-											))}
-										</Select.Content>
-									</Select.Root>
-								)}
-							</section>
-
-							<Separator size="4" />
-
-							<section className="pb-0.5" aria-labelledby="create-security-rules-heading">
+						<section className="pb-0.5" aria-labelledby="create-security-rules-heading">
 								<Accordion.Root type="single" collapsible>
 									<Accordion.Item
 										value="security"

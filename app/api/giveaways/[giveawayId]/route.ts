@@ -102,20 +102,6 @@ export async function PATCH(
 		);
 	}
 
-	if (!Object.prototype.hasOwnProperty.call(body, "requiredPassId")) {
-		return NextResponse.json({ error: "Missing requiredPassId (use null to clear)" }, { status: 400 });
-	}
-
-	let requiredPassId: string | null;
-	if (body.requiredPassId === null) {
-		requiredPassId = null;
-	} else if (typeof body.requiredPassId === "string") {
-		const trimmed = body.requiredPassId.trim();
-		requiredPassId = trimmed !== "" ? trimmed : null;
-	} else {
-		return NextResponse.json({ error: "requiredPassId must be a string or null" }, { status: 400 });
-	}
-
 	const endRaw = body.endTime;
 	if (typeof endRaw !== "string" || endRaw.trim() === "") {
 		return NextResponse.json({ error: "Valid endTime (ISO datetime string) required" }, { status: 400 });
@@ -140,7 +126,6 @@ export async function PATCH(
 			description,
 			coverImageUrl,
 			endTime,
-			requiredPassId,
 			minAccountAgeDays: security.minAccountAgeDays,
 			enforceIpChecks: security.enforceIpChecks,
 			enforceAccountAge: security.enforceAccountAge,

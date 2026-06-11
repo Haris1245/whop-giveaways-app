@@ -15,8 +15,6 @@ import {
 	Text,
 	TextArea,
 	TextField,
-	Spinner,
-	Select,
 	Switch,
 } from "frosted-ui";
 import { useIframeSdk } from "@whop/react/iframe";
@@ -29,8 +27,6 @@ import {
 } from "@/lib/append-whop-dev-user-token";
 import { formatCheckoutError } from "@/lib/checkout-errors";
 import { plans } from "@/lib/plans";
-import type { AccessPassOption } from "../../../giveaway-hub-types";
-import { NONE_PASS_VALUE } from "../../../giveaway-hub-types";
 
 function isoToDatetimeLocal(iso: string): string {
 	const d = new Date(iso);
@@ -54,7 +50,6 @@ export function GiveawayEditDialog(props: {
 	initialDescription: string;
 	initialCoverImageUrl: string | null;
 	initialEndTimeIso: string;
-	initialRequiredPassId: string | null;
 	initialEnforceIpChecks: boolean;
 	initialEnforceAccountAge: boolean;
 	initialMinAccountAgeDays: number;
@@ -71,13 +66,6 @@ export function GiveawayEditDialog(props: {
 	const [coverFile, setCoverFile] = useState<File | null>(null);
 	const [coverPreviewUrl, setCoverPreviewUrl] = useState<string | null>(null);
 	const [clearRemoteCover, setClearRemoteCover] = useState(false);
-
-	const [requiredPassId, setRequiredPassId] = useState(
-		props.initialRequiredPassId?.trim() ?? "",
-	);
-	const [passes, setPasses] = useState<AccessPassOption[]>([]);
-	const [passesLoading, setPassesLoading] = useState(false);
-	const [passesError, setPassesError] = useState<string | null>(null);
 
 	const [enforceIpChecks, setEnforceIpChecks] = useState(props.initialEnforceIpChecks);
 	const [enforceAccountAge, setEnforceAccountAge] = useState(props.initialEnforceAccountAge);
@@ -131,7 +119,6 @@ export function GiveawayEditDialog(props: {
 		});
 		if (coverInputRef.current) coverInputRef.current.value = "";
 		setClearRemoteCover(false);
-		setRequiredPassId(props.initialRequiredPassId?.trim() ?? "");
 		setEnforceIpChecks(props.initialEnforceIpChecks);
 		setEnforceAccountAge(props.initialEnforceAccountAge);
 		setMinAccountAgeDays(
@@ -144,7 +131,6 @@ export function GiveawayEditDialog(props: {
 		props.initialTitle,
 		props.initialDescription,
 		props.initialEndTimeIso,
-		props.initialRequiredPassId,
 		props.initialEnforceIpChecks,
 		props.initialEnforceAccountAge,
 		props.initialMinAccountAgeDays,
@@ -173,32 +159,7 @@ export function GiveawayEditDialog(props: {
 			}
 		}
 
-		async function loadPasses() {
-			setPassesLoading(true);
-			setPassesError(null);
-			try {
-				const res = await whopDevAwareFetch(
-					`/api/access-passes?experienceId=${encodeURIComponent(props.experienceId)}`,
-				);
-				const data = await res.json();
-				if (!res.ok) {
-					if (!cancelled) setPassesError(data.error ?? "Could not load passes");
-					if (!cancelled) setPasses([]);
-					return;
-				}
-				if (!cancelled) setPasses((data.passes ?? []) as AccessPassOption[]);
-			} catch {
-				if (!cancelled) {
-					setPassesError("Could not load passes");
-					setPasses([]);
-				}
-			} finally {
-				if (!cancelled) setPassesLoading(false);
-			}
-		}
-
 		void loadPlanLimits();
-		void loadPasses();
 		return () => {
 			cancelled = true;
 		};
@@ -261,17 +222,16 @@ export function GiveawayEditDialog(props: {
 			const res = await whopDevAwareFetch(`/api/giveaways/${props.giveawayId}`, {
 				method: "PATCH",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({
-					experienceId: props.experienceId,
-					title: title.trim(),
-					description: description.trim(),
-					coverImageUrl: resolvedCoverUrl,
-					requiredPassId: requiredPassId.trim() === "" ? null : requiredPassId.trim(),
-					minAccountAgeDays: enforceAccountAge ? minDays : 0,
-					enforceIpChecks,
-					enforceAccountAge,
-					endTime: endIso,
-				}),
+			body: JSON.stringify({
+				experienceId: props.experienceId,
+				title: title.trim(),
+				description: description.trim(),
+				coverImageUrl: resolvedCoverUrl,
+				minAccountAgeDays: enforceAccountAge ? minDays : 0,
+				enforceIpChecks,
+				enforceAccountAge,
+				endTime: endIso,
+			}),
 			});
 			const data = await res.json();
 			if (!res.ok) {
@@ -498,64 +458,9 @@ export function GiveawayEditDialog(props: {
 								</div>
 							</section>
 
-							<Separator size="4" />
+						<Separator size="4" />
 
-							<section className="flex flex-col gap-3" aria-labelledby="access-heading">
-								<Heading as="h3" size="4" weight="semi-bold" id="access-heading" className="text-gray-900 dark:text-gray-100">
-									Who can enter
-								</Heading>
-								<Text size="1" color="gray" id="edit-pass-hint">
-									Optional Whop pass — or leave open to anyone with hub access.
-								</Text>
-								{passesLoading ? (
-									<div
-										className="flex h-12 items-center gap-2 rounded-xl border border-black/10 bg-black/[0.02] px-3 dark:border-white/10 dark:bg-white/[0.03]"
-										aria-busy="true"
-									>
-										<Spinner loading size="1" />
-										<Text size="2" color="gray">
-											Loading passes…
-										</Text>
-									</div>
-								) : passesError ? (
-									<Text size="2" color="amber" as="div">
-										{passesError}. Close and reopen this dialog to retry.
-									</Text>
-								) : (
-									<Select.Root
-										size="3"
-										value={
-											requiredPassId.trim() === ""
-												? NONE_PASS_VALUE
-												: requiredPassId.trim()
-										}
-										onValueChange={(value) =>
-											setRequiredPassId(value === NONE_PASS_VALUE ? "" : value)
-										}
-									>
-										<Select.Trigger
-											className="w-full min-w-0"
-											variant="surface"
-											placeholder="Open to everyone with experience access"
-											aria-describedby="edit-pass-hint"
-										/>
-										<Select.Content position="popper">
-											<Select.Item value={NONE_PASS_VALUE}>
-												No pass required
-											</Select.Item>
-											{passes.map((p) => (
-												<Select.Item key={p.id} value={p.id}>
-													{p.title}
-												</Select.Item>
-											))}
-										</Select.Content>
-									</Select.Root>
-								)}
-							</section>
-
-							<Separator size="4" />
-
-							<section className="pb-0.5" aria-labelledby="edit-security-rules-heading">
+						<section className="pb-0.5" aria-labelledby="edit-security-rules-heading">
 								<Accordion.Root type="single" collapsible>
 									<Accordion.Item
 										value="security"

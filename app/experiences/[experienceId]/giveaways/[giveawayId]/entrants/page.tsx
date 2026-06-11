@@ -161,7 +161,6 @@ export default async function GiveawayEntrantsPage({
 			createdAt: giveawayTable.createdAt,
 			endTime: giveawayTable.endTime,
 			coverImageUrl: giveawayTable.coverImageUrl,
-			requiredPassId: giveawayTable.requiredPassId,
 			enforceIpChecks: giveawayTable.enforceIpChecks,
 			enforceAccountAge: giveawayTable.enforceAccountAge,
 			minAccountAgeDays: giveawayTable.minAccountAgeDays,
@@ -263,9 +262,8 @@ export default async function GiveawayEntrantsPage({
 								initialTitle={gw.title}
 								initialDescription={gw.description}
 								initialCoverImageUrl={gw.coverImageUrl}
-								initialEndTimeIso={(gw.endTime ?? new Date(0)).toISOString()}
-								initialRequiredPassId={gw.requiredPassId ?? null}
-								initialEnforceIpChecks={gw.enforceIpChecks}
+							initialEndTimeIso={(gw.endTime ?? new Date(0)).toISOString()}
+							initialEnforceIpChecks={gw.enforceIpChecks}
 								initialEnforceAccountAge={gw.enforceAccountAge}
 								initialMinAccountAgeDays={gw.minAccountAgeDays ?? 0}
 								rewardText={gw.rewardText}

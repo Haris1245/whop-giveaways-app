@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, type ReactNode } from "react";
-import { AlertDialog, Badge, Button, DropdownMenu, Heading, IconButton, Text } from "frosted-ui";
+import { AlertDialog, Button, DropdownMenu, Heading, IconButton, Text } from "frosted-ui";
 import { CheckCircle, Gift, Loader2, MoreHorizontal, Ticket, Trash2, Trophy, Users } from "lucide-react";
 import { whopDevAwareFetch } from "@/lib/append-whop-dev-user-token";
 import { FormattedDateTime } from "@/components/formatted-datetime";
@@ -15,9 +15,7 @@ import {
 	giveawayAcceptsEntries,
 } from "./giveaway-hub-utils";
 
-type GiveawayHubCardGiveaway = GiveawayRow & {
-	requiredPassTitle?: string | null;
-};
+type GiveawayHubCardGiveaway = GiveawayRow;
 
 function MenuRow({ children }: { children: ReactNode }) {
 	return (
@@ -174,23 +172,7 @@ export function GiveawayHubCard(props: {
 					{g.description}
 				</p>
 
-				{g.requiredPassId ? (
-					<div className="mt-4 mb-4 max-w-full">
-						<Badge
-							variant="soft"
-							color="gray"
-							size="1"
-							className="inline-flex max-w-full items-center gap-1.5 py-1 pl-1.5 pr-2.5 font-normal normal-case tracking-normal"
-						>
-							<Ticket className="h-3 w-3 shrink-0 opacity-70" aria-hidden />
-							<span className="truncate">
-								{g.requiredPassTitle ?? "Pass or membership required"}
-							</span>
-						</Badge>
-					</div>
-				) : null}
-
-				{/* Footer */}
+			{/* Footer */}
 				<div className="mt-auto flex flex-col gap-3 border-t border-black/10 pt-3.5 dark:border-white/[0.08]">
 					{/* Meta row */}
 					<div className="flex items-center justify-between">

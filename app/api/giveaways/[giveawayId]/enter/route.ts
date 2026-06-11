@@ -91,29 +91,6 @@ export async function POST(
 		}
 	}
 
-	if (giveaway.requiredPassId) {
-		try {
-			const passCheck = await whopSdk.access.checkIfUserHasAccessToAccessPass({
-				accessPassId: giveaway.requiredPassId,
-				userId,
-			});
-			if (!passCheck || !passCheck.hasAccess) {
-				return NextResponse.json(
-					{
-						error:
-							"You need the required access pass on Whop to enter this giveaway.",
-					},
-					{ status: 403 },
-				);
-			}
-		} catch {
-			return NextResponse.json(
-				{ error: "Could not verify access pass. Try again." },
-				{ status: 502 },
-			);
-		}
-	}
-
 	let username = "member";
 	let accountCreatedAt: Date | null = null;
 

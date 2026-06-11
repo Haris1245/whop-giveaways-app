@@ -36,6 +36,13 @@
       "when": 1778942000000,
       "tag": "0004_remove_reward_type",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1781167930191,
+      "tag": "0005_whole_zuras",
+      "breakpoints": true
     }
   ]
 }

@@ -13,7 +13,6 @@ export const giveawayTable = pgTable("giveaway", {
    coverImageUrl: text("cover_image_url"),
    rewardText: text("reward_text"),                   // Prize description (required at create)
 
-   requiredPassId: varchar("required_pass_id"),       // Whop Pass ID required to enter (null = free for all)
    minAccountAgeDays: integer("min_account_age_days").default(0), // Used when enforceAccountAge is true
    /** When true, entry flow should validate duplicate IPs / IP-based abuse rules */
    enforceIpChecks: boolean("enforce_ip_checks").default(false).notNull(),
